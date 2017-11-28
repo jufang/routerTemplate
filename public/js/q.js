@@ -77,10 +77,6 @@ var Q=function(W,D,HTML,hash,view,arg,_arg,i,index,Regex,key,Q){
 			
 			return this
 		},
-		V:function(){
-			console.log('Q.js <https://github.com/itorr/q.js> 2014/12/28');
-			return this
-		},
 		go:function(u){
 			location.hash='#'+key+u;
 			return this
