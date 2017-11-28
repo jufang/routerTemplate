@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><%= title %></title>
+	<style>
+		#nav{padding:.5em;}
+		#nav a{line-height:2em;padding:0 .5em;background:#EEE;
+			display:inline-block;vertical-align:top;}
+	</style>
+</head>
+<body>
+	<div id="nav">
+		<a href="#!home">首页</a>
+		<a href="#!home/str1/123">首页带参数</a>
+		<a href="#!null">URL不存在</a>
+		<a href="#!member">member</a>
+		<a href="#!before123end">before123end</a>
+		<a href="#!before5676end">before5676end</a>
+	</div>
+
+	<button id="getCurrentPage">获取当前页面地址</button>
+
+	<form id="SubmitForm">
+		<input name="url">
+		<button type="submit">go!</button>
+	</form>
+
+	<pre id="M"></pre>
+
+	<!-- <script src="js/q.js"></script> -->
+	<script>
+		var Q = function(W,D,HTML,hash,view,arg,_arg,i,index,Regex,key,Q){
+			HTML=D.documentElement;
+			Regex=[];
+			key='!';
+			onhashchange = function(){
+				Q.hash = hash = location.hash.substring(key.length+1)
+				arg = hash.split('/')
+				i=Regex.length;
+				while(i--)
+					if(_arg=hash.match(Regex[i])){
+						arg=_arg;
+						arg[0]=Regex[i];
+						break;
+					}
+			
+				if(Q.pop){
+					Q.pop.apply(W,arg)
+				}
+				if(!Q[arg[0]]) arg[0] = index
+				Q.lash = view = arg.shift()
+				Q[view].apply(W,arg)
+			}
+			Q = {
+				init:function(o){
+					if(o.key!==undefined) key=o.key;
+					index = o.index || "V"
+					if(o.pop && typeof(o.pop) ==='function'){
+						Q.pop = o.pop
+					}
+					onhashchange()
+					return this
+				},
+				reg:function(name,call){
+					if(!name) return
+					if(!call) call = function(){}
+					if(name instanceof RegExp){
+						Q[name]=call;
+						Regex.push(name);
+					}else if(name instanceof Array){
+						for(i in name){
+							this.reg.apply(this,[].concat(name[i]).concat(call))
+						}
+					}else if(typeof name ==="string"){
+						if(typeof call ==="function"){
+							Q[name] = call
+						}
+					}
+					return this
+				}
+			}
+			return Q
+		}(this,document)
+
+		var $ = function(i){
+			return document.querySelector(i)
+		}
+		Q.reg('home',function(str1,str2){
+			$('#M').innerHTML+='\n';
+			$('#M').innerHTML+='\n打开了home页';
+			if(str1)
+				$('#M').innerHTML+='\n参数一是'+str1;
+			if(str2)
+				$('#M').innerHTML+='\n参数二是'+str2;
+		});
+		/* 注册 member URL 无期待参数*/
+		Q.reg('member',function(){
+			$('#M').innerHTML+='\n';
+			$('#M').innerHTML+='\n用户页';
+		})
+		/* 通过正则表达式注册 URL */
+		Q.reg(/^before(\d+)end$/,function(num){
+			$('#M').innerHTML+='\n';
+			$('#M').innerHTML+='\n现在是通过正则注册的URL，里面的参数是：'+num;
+		})
+		/* 启动函数 */
+		Q.init({
+			key:'!',/* url里#和url名之间的分割符号 默认为感叹号 */
+			index:'home',/* 首页地址 如果访问到不能访问页面也会跳回此页 */
+			pop:function(L,arg){/* 每次有url变更时都会触发pop回调 */
+				console.log('pop 当前参数是:',arguments);
+			}
+		});
+
+
+		$('#getCurrentPage').onclick=function(){
+			$('#M').innerHTML+='\n';
+			$('#M').innerHTML+='\n当前页面地址: '+Q.lash;
+		};
+		$('#SubmitForm').onsubmit=function(e){
+			e.preventDefault();
+			if(!this.url.value)
+				return this.url.focus();
+			
+			Q.go(this.url.value);
+		};
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "q.js",
+  "version": "1.0.0",
+  "description": "一个超级简单的路由配置",
+  "main": "q.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  }
+}

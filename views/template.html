@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><%= title %></title>
+	<style>
+		xmp{
+			padding:1em;
+			background:#EEE;
+		}
+	</style>
+</head>
+<body>
+	<div id="m"></div>
+	<xmp id="M">
+		<p>{{existVar}}</p>
+
+		<p>{{notExistVar}}</p>
+
+		123
+		<ul>
+			{{#simpleArray}}
+			<li>列表：{{.}}</li>
+			{{/simpleArray}}
+		</ul>
+
+		{{$aLitterCode}}
+		<p>有 <code>一小段网页代码</code> 这个变量</p>
+		<p>转义掉网页标签：{{aLitterCode}}</p>
+		<p>直接扔给浏览器： {{&aLitterCode}}</p>
+		{{/aLitterCode}}
+
+		{{^aLitterCode}}
+		<p>并没有 一小段网页代码 这个变量</p>
+		{{/aLitterCode}}
+
+
+		<p>
+		{{$1==1}}
+			<code>一等一</code> 是正确的，所以我显示出来啦
+		{{/1==1}}
+		</p>
+		<p>
+		{{$var1==var2}}
+			<code>变量一==变量二</code> 是不是正确的呢
+		{{/var1==var2}}
+		</p>
+		<p>
+		{{$var2==var3}}
+			<code>变量二==变量三</code> 是不是正确的呢
+		{{/var2==var3}}
+		</p>
+
+		<h3>{{msg.hello}}, world</h3>
+
+		<blockquote>
+			<p>原始地址：<br>{{originImgSrc}}</p>
+			<p>带管道转义输出：<br>{{originImgSrc|printImg}}</p>
+			<p>带管道原始输出：<br>{{&originImgSrc|printImg|setTitle}}</p>
+		</blockquote>
+
+		<ul>
+		{{#chineseToEnglishArr}}
+			<li>
+				{{hanzi}}：{{pinyin}}
+			</li>
+		{{/chineseToEnglishArr}}
+		</ul>
+
+		{{#notExistLoopArray}}
+			<p>循环中:{{.}}</p>
+		{{/notExistLoopArray}}
+
+	</xmp>
+	<script src="js/template.js"></script>
+	<script>
+	var $ = function(i){
+		return document.querySelector(i)
+	}
+	var printImg=function(src){
+		return '<img src="'+src+'">';
+	};
+	var setTitle = function(src){
+		return '<div>图片的链接是</div>'+src
+	}
+	var d={
+		existVar:'我是存在的变量',
+		simpleArray:[1,2,5,8,0,'哪里不会点哪里'],
+		aLitterCode:'\'<script>alert()<\/script><b>加"粗</b>',
+		msg:{
+			hello:'你好'
+		},
+		originImgSrc:'http://ww2.sinaimg.cn/large/a15b4afegw1f1ivwrkufij209v0dwtb6.jpg',
+		chineseToEnglishArr:[
+			{
+				hanzi:'哇',
+				pinyin:'wa',
+			},
+			{
+				hanzi:'你',
+				pinyin:'ni',
+			},
+		],
+		var1:123,
+		var2:123,
+		var3:1234,
+	};
+	t=Template.ready($('#M').innerHTML,d);
+	$('#m').innerHTML=t;
+	</script>
+</body>
+</html>
